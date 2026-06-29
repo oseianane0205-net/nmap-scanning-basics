@@ -26,6 +26,9 @@ Scans were performed in stages to build a complete picture of the target before 
 **Severity:** Critical — successful exploitation grants immediate root-level access with no authentication required.
 
 **Technical details:** Nmap version detection identified `vsftpd 2.3.4`. The `ftp-vsftpd-backdoor` NSE script confirmed exploitability, returning `uid=0(root) gid=0(root)` when the backdoor command (`id`) was executed — confirming root-level command execution is possible via the known backdoor, tracked as **CVE-2011-2523**.
+![Nmap version detection showing vsftpd 2.3.4](vsftpd-version-and-anon-ftp.png)
+
+![Nmap script confirming vsftpd backdoor exploitability](vsftpd-backdoor-confirmed.png)
 
 **Impact:** An attacker could gain complete control of the host — read/modify/delete any file, install malware, pivot to other systems on the network, or use the host as a launching point for further attacks.
 
@@ -42,6 +45,7 @@ Scans were performed in stages to build a complete picture of the target before 
 **Severity:** Medium-High — removes the authentication barrier entirely and is often combined with other weaknesses to escalate access further.
 
 **Technical details:** Nmap's `ftp-anon` script confirmed the server returned code 230 (login successful) when connecting with the username "anonymous," meaning no valid credentials were required to gain access.
+![Nmap output confirming anonymous FTP login allowed](vsftpd-version-and-anon-ftp.png)
 
 **Impact:** Depending on configured permissions, an attacker could browse, download, or potentially upload files without valid credentials — useful for reconnaissance, data theft, or planting malicious files if write access is also permitted.
 
@@ -58,6 +62,7 @@ Scans were performed in stages to build a complete picture of the target before 
 **Severity:** Medium — does not grant direct access alone, but weakens the integrity of SMB communications and makes certain man-in-the-middle attacks (e.g. SMB relay) easier for an attacker already on the network.
 
 **Technical details:** Nmap's `smb-security-mode` script reported `message_signing: disabled (dangerous, but default)` — flagged by Nmap itself as a known security risk.
+![Nmap output showing SMB message signing disabled](smb-signing-disabled.png)
 
 **Impact:** An attacker on the same network could potentially intercept or manipulate SMB traffic, or relay captured authentication attempts to gain unauthorized access to other systems trusting the same credentials.
 
